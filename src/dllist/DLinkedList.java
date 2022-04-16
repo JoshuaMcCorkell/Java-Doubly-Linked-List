@@ -81,6 +81,7 @@ public class DLinkedList<T>
 
     @Override
     public void add(int index, T element) {
+        validateIndex(index, true);
         if (index > length/2) {
             linkAfter(element, getNodeFEnd(index-1));
         } else {
@@ -246,5 +247,15 @@ public class DLinkedList<T>
         for (T e : this)
             hashCode = 31*hashCode + (e==null ? 0 : e.hashCode());
         return hashCode;
+    }
+
+    void validateIndex(int index, boolean includeEnd) {
+        if (index < length) {
+            return;
+        } else if (index == length && includeEnd) {
+            return;
+        } else {
+            throw new IndexOutOfBoundsException("Index " + index + " out of bounds for length " + length);
+        }
     }
 }

@@ -37,11 +37,7 @@ public class DLinkedList<T>
 
     @Override
     public T get(int index) {
-        if (index > length/2) {
-            return getFromEnd(index);
-        } else {
-            return getFromStart(index);
-        }
+        return getNode(index).val;
     }
 
     /**
@@ -82,11 +78,7 @@ public class DLinkedList<T>
     @Override
     public void add(int index, T element) {
         validateIndex(index, true);
-        if (index > length/2) {
-            linkAfter(element, getNodeFEnd(index-1));
-        } else {
-            linkAfter(element, getNodeFStart(index-1));
-        }
+        linkAfter(element, getNode(index-1));
     }
 
     /**
@@ -146,6 +138,21 @@ public class DLinkedList<T>
             prevNode.next.prev = newNode;
             prevNode.next = newNode;
             length++;
+        }
+    }
+
+    /**
+     * Gets the node at the given index.
+     * This method assumes that the index is in the list.
+     * 
+     * @param index  The Node to get.
+     * @return  The node at position {@code index}.
+     */
+    Node<T> getNode(int index) {
+        if (index > length/2) {
+            return getNodeFEnd(index);
+        } else {
+            return getNodeFStart(index);
         }
     }
 
@@ -222,6 +229,46 @@ public class DLinkedList<T>
     }
 
     @Override
+    public boolean addAll(int index, Collection<? extends T> c) {
+        if (c.isEmpty()) {
+            return false;
+        }
+        if (head == null) {
+            addAll(c);
+            return true;
+        }
+        var pointer = getNode(index-1);
+        for (var element: c) {
+            linkAfter(element, pointer);
+            pointer = pointer.next;
+        }
+        return true;
+    }
+
+    /**
+     * Inserts all the elements in the array at the specified position,
+     * in the order that they are given in that array. 
+     * 
+     * @param c  The array to add elements from.
+     * @return  true if the list changed as a result of the call, otherwise false.
+     */
+    public boolean addAll(int index, T[] c) {
+        if (c.length == 0) {
+            return false;
+        }
+        if (head == null) {
+            addAll(c);
+            return true;
+        }
+        var pointer = getNode(index-1);
+        for (var element: c) {
+            linkAfter(element, pointer);
+            pointer = pointer.next;
+        }
+        return true;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == this) {
             return true;
@@ -250,11 +297,7 @@ public class DLinkedList<T>
     }
 
     void validateIndex(int index, boolean includeEnd) {
-        if (index < length) {
-            return;
-        } else if (index == length && includeEnd) {
-            return;
-        } else {
+        if (!(index < length || (index == length && includeEnd))) {
             throw new IndexOutOfBoundsException("Index " + index + " out of bounds for length " + length);
         }
     }

@@ -2,7 +2,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import java.util.LinkedList;
-import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
 
@@ -48,6 +47,18 @@ public class Tests {
     }
 
     @Test
+    public void addAll2() {
+        a = new DLinkedList<>();
+        a.add(1); a.add(5);
+        DLinkedList<Integer> aa = new DLinkedList<>();
+        aa.addAll(0, new Integer[] {2, 3, 4});
+        a.addAll(1, aa);
+        for (int i = 0; i < 5; i++) {
+            assertEquals(Integer.valueOf(i + 1), a.get(i));
+        }
+    }
+
+    @Test
     public void length() {
         a = new DLinkedList<>();
         a.addAll(new Integer[] {1, 2, 3, 5});
@@ -77,6 +88,7 @@ public class Tests {
         assertEquals(Integer.valueOf(1), a.get(0));
         try {
             a.add(5, 2);
+            throw new ArrayStoreException("Should have thrown an error here.");
         } catch (IndexOutOfBoundsException ignore) {}
         a.add(1, 2);
         assertEquals(Integer.valueOf(2), a.get(1));

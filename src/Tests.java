@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import dllist.DLinkedList;
 
+import java.util.LinkedList;
+
 public class Tests {
 
     DLinkedList<Integer> a;
@@ -93,5 +95,35 @@ public class Tests {
         a.add(1, 2);
         assertEquals(Integer.valueOf(2), a.get(1));
         assertEquals(Integer.valueOf(1), a.get(0));
+        DLinkedList<Integer> aa = new DLinkedList<>();
+        aa.addAll(a);
+        for (int i = 0; i < a.size(); i++) {
+            assertEquals(a.get(i), aa.get(i));
+        }
+    }
+
+    @Test 
+    public void clear() {
+        a = new DLinkedList<>();
+        a.add(1); a.add(2); a.add(3);
+        a.clear();
+        assertEquals(new DLinkedList<Integer>(), a);
+        a.addAll(new Integer[] {1, 5, 200, 123087, 10, 0, -1});
+        a.clear();
+        assertEquals(new DLinkedList<Integer>(), a);
+    }
+
+    @Test
+    public void reverseIterator() {
+        a = new DLinkedList<>();
+        for (int i = 0; i < 100000; i++) {
+            a.add(i);
+        }
+        int i = 99999;
+        var iter = a.descendingIterator();
+        while (iter.hasNext()) {
+            assertEquals(Integer.valueOf(i), iter.next());
+            i--;
+        }
     }
 }
